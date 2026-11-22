@@ -21,6 +21,14 @@ public partial class App : Application
     {
         base.OnStartup(e);
 
+        if (e.Args.Length >= 2 && e.Args[0] == "--snapshot")
+        {
+            try { Snapshot.Run(e.Args[1]); }
+            catch (Exception ex) { LogError(ex); }
+            Shutdown();
+            return;
+        }
+
         _singleInstance = new Mutex(true, @"Local\MusicOverlay.SingleInstance", out bool isFirst);
         if (!isFirst)
         {

@@ -44,6 +44,9 @@ public partial class MainWindow : Window
 
     public event EventHandler? ExitRequested;
 
+    /// <summary>Offscreen rendering for <see cref="Snapshot"/>: the window is never shown.</summary>
+    public static bool SnapshotMode { get; set; }
+
     public MainWindow(MediaHub hub, AppSettings settings)
     {
         _hub = hub;
@@ -103,6 +106,33 @@ public partial class MainWindow : Window
         UpdateProgress();
 
         if (playing && IsVisible) _tick.Start(); else _tick.Stop();
+    }
+
+    /// <summary>Render the card (with its shadow margin) for a given track and look, without showing the window.</summary>
+    public BitmapSource RenderSnapshot(MediaState state, OverlayTheme theme, TextCase textCase, double scale)
+    {
+        _settings.Theme = theme;
+        _settings.TextCase = textCase;
+        _palette = null;
+        OnState(state, immediate: true);
+
+        void Layout()
+        {
+            Root.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+            Root.Arrange(new Rect(Root.DesiredSize));
+            Root.UpdateLayout();
+        }
+        Layout();
+        _fillWidth = -1;
+        UpdateProgress();
+        Layout();
+
+        var size = Root.DesiredSize;
+        var rtb = new RenderTargetBitmap((int)Math.Ceiling(size.Width * scale), (int)Math.Ceiling(size.Height * scale),
+            96 * scale, 96 * scale, PixelFormats.Pbgra32);
+        rtb.Render(Root);
+        rtb.Freeze();
+        return rtb;
     }
 
     private void RenderText()
@@ -239,6 +269,7 @@ public partial class MainWindow : Window
 
     private void UpdateVisibility()
     {
+        if (SnapshotMode) return;
         bool idle = _state is not { IsPlaying: true };
         var behavior = _settings.IdleBehavior;
         if (!idle || behavior == IdleBehavior.Show)

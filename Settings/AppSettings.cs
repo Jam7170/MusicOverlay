@@ -133,8 +133,13 @@ public sealed class AppSettings
         return new();
     }
 
+    /// <summary>When set (snapshot mode), <see cref="Save"/> does nothing.</summary>
+    [JsonIgnore]
+    public bool ReadOnly { get; set; }
+
     public void Save()
     {
+        if (ReadOnly) return;
         try
         {
             System.IO.Directory.CreateDirectory(Directory);

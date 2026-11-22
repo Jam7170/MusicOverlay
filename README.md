@@ -3,6 +3,11 @@
 A small, borderless, always-on-top "now playing" card for Windows. Native WPF (.NET 10), no browser engine.
 It uses about 0.5% of one CPU core while playing, ~0% while paused, and around 100 MB of private memory.
 
+![Music Overlay in Vivid, Classic and Dusk themes](docs/screenshots/themes.png)
+
+*Top: **Vivid**, which takes its accent colours from the album art. Bottom: **Classic** (fixed colours, lowercase text)
+and **Dusk** (tinted). The screenshots use generated artwork and made-up tracks.*
+
 ## Install
 
 ```powershell
@@ -77,3 +82,16 @@ Theming/Palette.cs       Vivid/Dusk palettes + album-art colour extraction
 MainWindow.xaml(.cs)     the card
 App.xaml(.cs)            startup, tray icon, single instance
 ```
+
+## Screenshots
+
+The images in `docs/screenshots` are rendered offscreen, so there's no desktop capture or real album art in them:
+
+```powershell
+dotnet build -c Release
+.\bin\Release\net10.0-windows10.0.19041.0\MusicOverlay.exe --snapshot docs\screenshots
+```
+
+## License
+
+[MIT](LICENSE). The bundled Quicksand font is licensed under the SIL Open Font License (`Fonts/OFL.txt`).
