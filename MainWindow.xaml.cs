@@ -596,10 +596,8 @@ public partial class MainWindow : Window
 
     private void ApplyFont()
     {
-        var fontsDir = Path.Combine(AppContext.BaseDirectory, "Fonts");
-        FontFamily = Directory.Exists(fontsDir)
-            ? new FontFamily(new Uri(AppContext.BaseDirectory), "./Fonts/#Quicksand, " + _settings.FontFamily)
-            : new FontFamily(_settings.FontFamily);
+        // Quicksand is embedded as a resource; the setting is the fallback chain.
+        FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./Fonts/#Quicksand, " + _settings.FontFamily);
     }
 
     // ---------------- interop ----------------

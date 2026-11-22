@@ -8,7 +8,19 @@ It uses about 0.5% of one CPU core while playing, ~0% while paused, and around 1
 *Top: **Vivid**, which takes its accent colours from the album art. Bottom: **Classic** (fixed colours, lowercase text)
 and **Dusk** (tinted). The screenshots use generated artwork and made-up tracks.*
 
-## Install
+## Download
+
+Grab the latest build from [Releases](https://github.com/Jam7170/MusicOverlay/releases/latest):
+
+| File | Notes |
+|---|---|
+| `MusicOverlay-<version>-win-x64.zip` | **Recommended.** Unzip and run `MusicOverlay.exe`. Nothing else to install. |
+| `MusicOverlay-<version>-win-x64-requires-dotnet10.exe` | Smaller download. Needs the [.NET 10 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/10.0). |
+
+Both run from anywhere. Right-click the card → **Start with Windows** to launch it at sign-in. The exe isn't code-signed,
+so Windows SmartScreen may warn on first run (**More info → Run anyway**).
+
+## Build and install from source
 
 ```powershell
 .\install.ps1

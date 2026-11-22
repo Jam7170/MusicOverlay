@@ -14,6 +14,12 @@
     <RootNamespace>MusicOverlay</RootNamespace>
     <AssemblyName>MusicOverlay</AssemblyName>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>app.ico</ApplicationIcon>
+
+    <Version>1.0.0</Version>
+    <Product>Music Overlay</Product>
+    <Description>Borderless now-playing overlay for Windows</Description>
+    <Copyright>Copyright (c) 2026 Jam7170</Copyright>
 
     <!-- Keep the footprint small: workstation, non-concurrent GC. -->
     <ServerGarbageCollection>false</ServerGarbageCollection>
@@ -23,7 +29,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="Fonts\**" CopyToOutputDirectory="PreserveNewest" Condition="Exists('Fonts')" />
+    <!-- Embedded so single-file builds carry the font. -->
+    <Resource Include="Fonts\*.ttf" />
+    <Resource Include="app.ico" />
   </ItemGroup>
 
 </Project>

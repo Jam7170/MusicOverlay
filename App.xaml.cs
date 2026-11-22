@@ -73,33 +73,23 @@ public partial class App : Application
         };
     }
 
+    /// <summary>The embedded app.ico (same as the exe icon) at the system's small-icon size.</summary>
     private static Drawing.Icon CreateTrayIcon()
     {
-        using var bmp = new Drawing.Bitmap(32, 32);
-        using (var g = Drawing.Graphics.FromImage(bmp))
+        try
         {
-            g.SmoothingMode = Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            g.TextRenderingHint = Drawing.Text.TextRenderingHint.AntiAliasGridFit;
-            g.Clear(Drawing.Color.Transparent);
-
-            using var path = new Drawing.Drawing2D.GraphicsPath();
-            const int r = 9;
-            var rect = new Drawing.Rectangle(1, 1, 30, 30);
-            path.AddArc(rect.X, rect.Y, r * 2, r * 2, 180, 90);
-            path.AddArc(rect.Right - r * 2, rect.Y, r * 2, r * 2, 270, 90);
-            path.AddArc(rect.Right - r * 2, rect.Bottom - r * 2, r * 2, r * 2, 0, 90);
-            path.AddArc(rect.X, rect.Bottom - r * 2, r * 2, r * 2, 90, 90);
-            path.CloseFigure();
-
-            using var fill = new Drawing.Drawing2D.LinearGradientBrush(rect,
-                Drawing.Color.FromArgb(0xE0, 0x4E, 0x5C), Drawing.Color.FromArgb(0x6F, 0x69, 0xA8), 45f);
-            g.FillPath(fill, path);
-
-            using var font = new Drawing.Font("Segoe UI Symbol", 18, Drawing.FontStyle.Bold, Drawing.GraphicsUnit.Pixel);
-            using var fmt = new Drawing.StringFormat { Alignment = Drawing.StringAlignment.Center, LineAlignment = Drawing.StringAlignment.Center };
-            g.DrawString("♪", font, Drawing.Brushes.White, new Drawing.RectangleF(0, 1, 32, 32), fmt);
+            var info = GetResourceStream(new Uri("pack://application:,,,/app.ico"));
+            if (info != null)
+            {
+                using var stream = info.Stream;
+                return new Drawing.Icon(stream, Forms.SystemInformation.SmallIconSize);
+            }
         }
-        return Drawing.Icon.FromHandle(bmp.GetHicon());
+        catch
+        {
+            // fall through
+        }
+        return Drawing.SystemIcons.Application;
     }
 
     private async void ExitApp()
