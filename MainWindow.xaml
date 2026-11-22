@@ -1,0 +1,94 @@
+<Window x:Class="MusicOverlay.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Music Overlay"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        ShowActivated="False"
+        Topmost="True"
+        SizeToContent="WidthAndHeight"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Grayscale">
+
+    <Grid x:Name="Root" Margin="14">
+        <Grid.LayoutTransform>
+            <ScaleTransform x:Name="RootScale" ScaleX="1" ScaleY="1" />
+        </Grid.LayoutTransform>
+
+        <!-- Shadow lives on a sibling so progress updates never re-render the effect. -->
+        <Border CornerRadius="22" Background="#000000" Margin="2">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="16" ShadowDepth="2" Direction="270" Opacity="0.45" RenderingBias="Performance" />
+            </Border.Effect>
+        </Border>
+
+        <Grid x:Name="Card" Width="420" SizeChanged="Card_SizeChanged">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="128" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop x:Name="PanelTopStop" Offset="0.45" Color="#4A4552" />
+                    <GradientStop x:Name="PanelBottomStop" Offset="1" Color="#38343F" />
+                </LinearGradientBrush>
+            </Grid.Background>
+
+            <!-- Album art -->
+            <Image x:Name="ArtImage" Grid.Row="0" Stretch="UniformToFill" VerticalAlignment="Center"
+                   RenderOptions.BitmapScalingMode="HighQuality" />
+            <Rectangle x:Name="ArtTint" Grid.Row="0" Opacity="0" />
+            <Rectangle Grid.Row="0" VerticalAlignment="Bottom" Height="34">
+                <Rectangle.Fill>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop x:Name="FadeStartStop" Offset="0" Color="#004A4552" />
+                        <GradientStop x:Name="FadeEndStop" Offset="1" Color="#FF4A4552" />
+                    </LinearGradientBrush>
+                </Rectangle.Fill>
+            </Rectangle>
+
+            <Button x:Name="PlayPauseButton" Grid.Row="0" Width="40" Height="40"
+                    HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,18,-14"
+                    Panel.ZIndex="10"
+                    Style="{StaticResource OverlayButton}" Click="PlayPause_Click">
+                <Path x:Name="PlayPauseGlyph" Data="{StaticResource PlayGlyph}" Width="14" Height="16"
+                      Stretch="Uniform" StrokeThickness="1.6" StrokeLineJoin="Round" />
+            </Button>
+
+            <!-- Text + progress -->
+            <StackPanel Grid.Row="1" Margin="24,8,24,20">
+                <TextBlock x:Name="TitleText" Text="Nothing playing" FontSize="21" FontWeight="Bold"
+                           HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                <TextBlock x:Name="ArtistText" FontSize="15" FontWeight="Medium" Margin="0,1,0,0"
+                           HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" />
+
+                <Grid Margin="0,18,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock x:Name="ElapsedText" Text="0:00" FontSize="13" FontWeight="Bold"
+                               MinWidth="34" TextAlignment="Left" VerticalAlignment="Center" />
+                    <Grid x:Name="ProgressHost" Grid.Column="1" Height="16" Margin="12,0" Background="Transparent"
+                          Cursor="Hand" MouseLeftButtonDown="Progress_MouseLeftButtonDown"
+                          SizeChanged="ProgressHost_SizeChanged">
+                        <Border x:Name="ProgressTrack" Height="8" CornerRadius="4" VerticalAlignment="Center" />
+                        <Border x:Name="ProgressFill" Height="8" CornerRadius="4" VerticalAlignment="Center"
+                                HorizontalAlignment="Left" Width="0" />
+                    </Grid>
+                    <TextBlock x:Name="DurationText" Grid.Column="2" Text="0:00" FontSize="13" FontWeight="Bold"
+                               MinWidth="34" TextAlignment="Right" VerticalAlignment="Center" />
+                </Grid>
+            </StackPanel>
+        </Grid>
+
+        <!-- Border drawn on top so it isn't clipped. -->
+        <Border x:Name="CardBorder" CornerRadius="22" BorderThickness="1.5" IsHitTestVisible="False" />
+    </Grid>
+</Window>
